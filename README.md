@@ -34,3 +34,33 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+Prisma installation setup:
+
+first download Prisma client
+
+2) Install prisma client using the command , npm install prisma client
+3) Prisma needs a dotenv file , make sure to create it.
+4) Inside  schema/prisma change the db provider to the "mongodb"
+5) Create models using the model keyword
+6) Ensure , database is  connected via vs code, using Ip address,
+7) To create a collection use command, npx prisma db push
+
+
+
+# Installation of next-auth to use it .
+1) use the cmd to install next -auth npm i next-auth
+2) To support the bcrypting options, use the cmd npm i bcrypt
+
+
+
+# Adpaters;
+npm cmd : npm install @next-auth/prisma-adapter for google and github auth
+
+inside github, go to profile setting. Generate , client and secret  key
+
+#Google auth
+//Get into google cloud, sign in  and create a project. Search api *& services. 
+//Go to credentials and click oAuth click on application type    
+Under redirected urls :http://localhost:3000/api/auth/callback/google

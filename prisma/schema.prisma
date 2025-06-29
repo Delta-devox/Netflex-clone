@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+// change the database from prisma db to mongodb.
+//creating a user model
+//Using model keyword, schema is created. eg: model Schema_name{}
+model User {
+  id String @id @default(auto()) @map("_id") @db.ObjectId //id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String // For the schema, properties type and constraints.
+  image String?
+  email String? @unique
+  emailVerified DateTime?
+  hashedPassword String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  favouriteIds String[] @db.ObjectId
+  sessions Session[]
+  accounts Account[]
+}
+
+model Account {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  type String
+  provider String
+  providerAccountId String
+  refresh_token String? @db.String
+  access_token String? @db.String
+  expires_at Int?
+  token_type String?
+  scope String?
+  id_token String?
+  session_state String?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  sessionToken String @unique
+  accessToken String @unique
+  expires DateTime
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerficationToken {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token String @unique
+  expires DateTime
+  @@unique([identifier, token])
+}
+
+model Movie {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  description String
+  videoUrl String
+  thumbnailUrl String
+  genres String
+  duration String
+}
+
+
+/*
+1_In this code, every model becomes a mongodb collection and every field becomes a property of the collection
+2_model is created using a keyword called model.
+For eg:
+model User {
+id @id @default(auto()) @map("_id") @db.objectId;
+// This lines refers to generation of auto generated id to the mongodb id which gets mapped to it.
+}
+So after the model gets created , Use PrismaClient object to create a an endpoint .
+So the program goes like
+import {PrismaClient} from "prismaclient"
+const prisma = new PrismaClient();
+
+After the creation of an object, by using prisma data can be easily created , readed and updated.
+[########In this project connection of prismaclient is made through lib folder #########]
+That is @lib/prismadb.ts
+
+Because rather than importing prismaclient in all the folder where it plays its role to avoid repeatation global folder is created.
+With the code ...
+import {PrismaClient} from "@prisma/client"
+
+const client = global.prismadb || new PrismaClient();
+
+if(The process env equals production)
+{
+make the client as a global;
+client = global.prismadb;
+}
+
+*/
